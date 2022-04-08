@@ -16,3 +16,9 @@ class Toy(db.Model):
   def serialize(self):
     toy = {c.name: getattr(self, c.name) for c in self.__table__.columns}
     return toy
+
+class Association(db.Model):
+  __tablename__ = 'associations'
+  id = db.Column(db.Integer, primary_key=True)
+  cat_id = db.Column(db.Integer, db.ForeignKey('cats.id', ondelete='cascade'))
+  toy_id = db.Column(db.Integer, db.ForeignKey('toys.id', ondelete='cascade'))

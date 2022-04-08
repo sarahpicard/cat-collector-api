@@ -11,6 +11,7 @@ class Cat(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
   feedings = db.relationship("Feeding", cascade='all')
+  toys = db.relationship("Toy", secondary="associations")
 
   def __repr__(self):
     return f"Cat('{self.id}', '{self.name}'"
@@ -18,7 +19,9 @@ class Cat(db.Model):
   def serialize(self):
     cat = {c.name: getattr(self, c.name) for c in self.__table__.columns}
     feedings = [feeding.serialize() for feeding in self.feedings]
+    toys = [toy.serialize() for toy in self.toys]
     cat['feedings'] = feedings
+    cat['toys'] = toys
     return cat
 
   def fed_for_today(self):
